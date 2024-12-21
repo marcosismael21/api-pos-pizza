@@ -5,6 +5,11 @@ namespace api_pos_pizza.Models
 {
     public partial class Producto
     {
+        public Producto()
+        {
+            DetallePedidos = new HashSet<DetallePedido>();
+        }
+
         public int Id { get; set; }
         public string? Nombre { get; set; }
         public string? CodigoBarra { get; set; }
@@ -15,5 +20,6 @@ namespace api_pos_pizza.Models
 
         public virtual Categorium IdCategoriaNavigation { get; set; } = null!;
         public virtual Proveedor IdProveedorNavigation { get; set; } = null!;
+        public virtual ICollection<DetallePedido> DetallePedidos { get; set; }
     }
 }
