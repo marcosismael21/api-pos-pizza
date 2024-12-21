@@ -21,6 +21,7 @@ builder.Services.AddControllers().AddJsonOptions(opt =>
 });
 
 builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
+builder.Services.AddScoped<IProveedorRepository, ProveedorRepository>();
 
 var app = builder.Build();
 
