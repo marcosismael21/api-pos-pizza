@@ -1,4 +1,4 @@
-# Laboratorio de Evaluación de Candidatos
+# Laboratorio de Evaluación de Candidatos parte 1
 
 Hola me llamo Marcos Rodriguez, en este repositorio tengo todos los commit que realice para la creacion de una API para un POS de una pizzeria.
 
