@@ -25,6 +25,7 @@ builder.Services.AddScoped<IProveedorRepository, ProveedorRepository>();
 builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
 builder.Services.AddScoped<IDireccionClienteRepository, DireccionClienteRepository>();
 builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
+builder.Services.AddScoped<ITipoPedidoRepository, TipoPedidoRepository>();
 
 var app = builder.Build();
 

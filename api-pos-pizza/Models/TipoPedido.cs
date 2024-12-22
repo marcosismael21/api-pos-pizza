@@ -12,6 +12,7 @@ namespace api_pos_pizza.Models
 
         public int Id { get; set; }
         public string? Nombre { get; set; }
+        public bool? Estado { get; set; }
 
         public virtual ICollection<Pedido> Pedidos { get; set; }
     }
