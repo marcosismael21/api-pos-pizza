@@ -30,11 +30,6 @@ namespace api_pos_pizza.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=LabPosPizza;User Id=sa;Password=Oso12121;");
-            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -53,8 +48,6 @@ namespace api_pos_pizza.Data
                 entity.Property(e => e.Correo).HasMaxLength(100);
 
                 entity.Property(e => e.Dni).HasMaxLength(20);
-
-                entity.Property(e => e.Estado).HasMaxLength(20);
 
                 entity.Property(e => e.Nombre).HasMaxLength(100);
 
@@ -154,6 +147,7 @@ namespace api_pos_pizza.Data
                 entity.HasOne(d => d.IdClienteNavigation)
                     .WithMany(p => p.DireccionClientes)
                     .HasForeignKey(d => d.IdCliente)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Cliente");
             });
 
@@ -164,8 +158,6 @@ namespace api_pos_pizza.Data
                 entity.Property(e => e.Descuento).HasColumnType("decimal(10, 2)");
 
                 entity.Property(e => e.DireccionPersonalizada).HasMaxLength(255);
-
-                entity.Property(e => e.Estado).HasMaxLength(20);
 
                 entity.Property(e => e.Fecha)
                     .HasColumnType("datetime")

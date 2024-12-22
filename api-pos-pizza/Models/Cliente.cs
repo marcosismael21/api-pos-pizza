@@ -17,7 +17,7 @@ namespace api_pos_pizza.Models
         public string? Dni { get; set; }
         public string? Telefono { get; set; }
         public string? Correo { get; set; }
-        public string? Estado { get; set; }
+        public bool? Estado { get; set; }
 
         public virtual ICollection<DireccionCliente> DireccionClientes { get; set; }
         public virtual ICollection<Pedido> Pedidos { get; set; }
