@@ -1,6 +1,7 @@
 ﻿using api_pos_pizza.Data;
 using api_pos_pizza.Models;
 using api_pos_pizza.Repositories.Interfaces;
+using api_pos_pizza.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace api_pos_pizza.Repositories
@@ -30,6 +31,15 @@ namespace api_pos_pizza.Repositories
 
         public async Task<Colaborador> Create(Colaborador colaborador)
         {
+            var usuarioExistente = await _context.Colaboradors
+                .AnyAsync(c => c.Usuario == colaborador.Usuario);
+
+            if (usuarioExistente)
+            {
+                throw new Exception("Ya existe un colaborador con este nombre de usuario");
+            }
+
+            colaborador.Clave = PasswordService.HashPassword(colaborador.Clave);
             _context.Colaboradors.Add(colaborador);
             await _context.SaveChangesAsync();
             return colaborador;
@@ -37,22 +47,25 @@ namespace api_pos_pizza.Repositories
 
         public async Task<Colaborador?> Update(int id, Colaborador colaborador)
         {
-            var existingColanorador = await _context.Colaboradors.FindAsync(id);
-
-            if (existingColanorador == null)
+            var existingColaborador = await _context.Colaboradors.FindAsync(id);
+            if (existingColaborador == null)
                 return null;
 
-            existingColanorador.Idrol = colaborador.Idrol;
-            existingColanorador.Nombres = colaborador.Nombres ?? existingColanorador.Nombres;
-            existingColanorador.Dni = colaborador.Dni ?? existingColanorador.Dni;
-            existingColanorador.Correo = colaborador.Correo ?? existingColanorador.Correo;
-            existingColanorador.Telefono = colaborador.Telefono ?? existingColanorador.Telefono;
-            existingColanorador.Usuario = colaborador.Usuario ?? existingColanorador.Usuario;
-            existingColanorador.Clave = colaborador.Clave ?? existingColanorador.Clave;
-            existingColanorador.Estado = colaborador.Estado ?? existingColanorador.Estado;
+            existingColaborador.Idrol = colaborador.Idrol;
+            existingColaborador.Nombres = colaborador.Nombres ?? existingColaborador.Nombres;
+            existingColaborador.Dni = colaborador.Dni ?? existingColaborador.Dni;
+            existingColaborador.Correo = colaborador.Correo ?? existingColaborador.Correo;
+            existingColaborador.Telefono = colaborador.Telefono ?? existingColaborador.Telefono;
+            existingColaborador.Usuario = colaborador.Usuario ?? existingColaborador.Usuario;
 
+            if (!string.IsNullOrEmpty(colaborador.Clave))
+            {
+                existingColaborador.Clave = PasswordService.HashPassword(colaborador.Clave);
+            }
+
+            existingColaborador.Estado = colaborador.Estado ?? existingColaborador.Estado;
             await _context.SaveChangesAsync();
-            return existingColanorador;
+            return existingColaborador;
         }
 
         public async Task<bool> Delete(int id)
@@ -69,6 +82,12 @@ namespace api_pos_pizza.Repositories
         public async Task<bool> Exists(int id)
         {
             return await _context.Colaboradors.AnyAsync(c => c.Id == id);
+        }
+
+        public async Task<bool> ExisteUsuario(string usuario)
+        {
+            return await _context.Colaboradors
+                .AnyAsync(c => c.Usuario == usuario);
         }
     }
 }

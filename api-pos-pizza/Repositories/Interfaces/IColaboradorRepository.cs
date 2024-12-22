@@ -10,5 +10,6 @@ namespace api_pos_pizza.Repositories.Interfaces
         Task<Colaborador?> Update(int id, Colaborador colaborador);
         Task<bool> Delete(int id);
         Task<bool> Exists(int id);
+        Task<bool> ExisteUsuario(string usuario);
     }
 }

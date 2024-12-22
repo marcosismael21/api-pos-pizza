@@ -3,6 +3,7 @@ using api_pos_pizza.Models;
 using api_pos_pizza.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace api_pos_pizza.Controllers
 {
@@ -92,6 +93,14 @@ namespace api_pos_pizza.Controllers
         {
             try
             {
+                var existeUsuario = await _colaboradorRepository.ExisteUsuario(colaboradorDTO.Usuario);
+
+                if (existeUsuario)
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest,
+                        new { message = "Ya existe un colaborador con este nombre de usuario" });
+                }
+
                 var colaborador = new Colaborador
                 {
                     Idrol = colaboradorDTO.Idrol,
