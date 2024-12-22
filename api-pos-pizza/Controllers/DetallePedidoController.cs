@@ -1,11 +1,13 @@
 ﻿using api_pos_pizza.DTOs;
 using api_pos_pizza.Models;
 using api_pos_pizza.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api_pos_pizza.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class DetallePedidoController : ControllerBase
@@ -17,6 +19,7 @@ namespace api_pos_pizza.Controllers
             _detallePedidoRepository = detallePedidoRepository;
         }
 
+        [Authorize(Roles = "Administrador,Cajero")]
         [HttpGet]
         public async Task<IActionResult> Lista()
         {
@@ -48,6 +51,7 @@ namespace api_pos_pizza.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrador,Cajero")]
         [HttpGet]
         [Route("{id:int}")]
         public async Task<IActionResult> Obtener(int id)
@@ -83,6 +87,7 @@ namespace api_pos_pizza.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrador,Cajero")]
         [HttpPost]
         public async Task<IActionResult> Guardar([FromBody] CreateDetallePedidoDTO detallePedidoDTO)
         {
@@ -106,6 +111,7 @@ namespace api_pos_pizza.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrador,Cajero")]
         [HttpPut]
         [Route("{id:int}")]
         public async Task<IActionResult> Editar(int id, [FromBody] UpdateDetallePedidoDTO detallePedidoDTO)
@@ -134,6 +140,7 @@ namespace api_pos_pizza.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrador,Cajero")]
         [HttpDelete]
         [Route("{id:int}")]
         public async Task<IActionResult> Eliminar(int id)

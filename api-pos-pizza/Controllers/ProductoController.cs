@@ -2,12 +2,14 @@
 using api_pos_pizza.DTOs;
 using api_pos_pizza.Models;
 using api_pos_pizza.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace api_pos_pizza.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ProductoController : ControllerBase
@@ -19,6 +21,7 @@ namespace api_pos_pizza.Controllers
             _productoRepository = productoRepository;
         }
 
+        [Authorize(Roles = "Administrador,Cajero")]
         [HttpGet]
         public async Task<IActionResult> Lista()
         {
@@ -51,6 +54,7 @@ namespace api_pos_pizza.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrador,Cajero")]
         [HttpGet]
         [Route("{id:int}")]
         public async Task<IActionResult> Obtener(int id)
@@ -87,6 +91,7 @@ namespace api_pos_pizza.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpPost]
         public async Task<IActionResult> Guardar([FromBody] CreateProductoDTO productoDTO)
         {
@@ -111,6 +116,7 @@ namespace api_pos_pizza.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpPut]
         [Route("{id:int}")]
         public async Task<IActionResult> Editar(int id, [FromBody] UpdateProductoDTO productoDTO)
@@ -140,6 +146,7 @@ namespace api_pos_pizza.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpDelete]
         [Route("{id:int}")]
         public async Task<IActionResult> Eliminar(int id)
