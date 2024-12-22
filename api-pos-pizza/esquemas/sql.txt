@@ -1,0 +1,105 @@
+﻿-- primera tarea (crear producto)
+
+create database LabPosPizza
+
+use LabPosPizza
+
+create table Categoria(
+Id int primary key identity(1,1),
+Descripcion varchar(255),
+Estado bit
+);
+
+create table Proveedor(
+Id int primary key identity(1,1),
+NombreComercio varchar(255),
+NombreProveedor varchar(255),
+Rtn varchar(255),
+Telefono varchar(255),
+Correo varchar(255),
+Estado bit
+);
+
+create table Producto(
+Id int primary key identity(1,1),
+Nombre varchar(255),
+CodigoBarra varchar(255),
+Descripcion varchar(255),
+IdCategoria int not null,
+IdProveedor int not null,
+Precio decimal(10,2),
+constraint FK_CategoriaProducto foreign key (IdCategoria) references Categoria(Id),
+constraint FK_ProveedorProducto foreign key (IdProveedor) references Proveedor(Id)
+);
+
+-- segunda tarea (hacer el resto de los modelos )
+
+create table Cliente (
+    Id int primary key identity(1,1),
+    Nombre varchar(255),
+    Rtn varchar(255),
+    Dni varchar(255),
+    Telefono varchar(255),
+    Correo varchar(255),
+    Estado bit
+);
+
+create table DireccionCliente (
+    Id int primary key identity(1,1),
+    IdCliente int not null,
+    Alias varchar(255),
+    Direccion varchar(255),
+    constraint FK_Cliente foreign key (IdCliente) references Cliente(Id)
+);
+
+create table Pedido (
+    Id int primary key identity(1,1),
+    IdCliente int not null,
+    IdTipoPedido int not null,
+    IdDireccion int null,
+    DireccionPersonalizada varchar(255) null,
+    Subtotal decimal(10,2),
+    Impuesto decimal(10,2),
+    Descuento decimal(10,2),
+    Total decimal(10,2),
+    Fecha datetime default getdate(),
+    constraint FK_Cliente_Pedido foreign key (IdCliente) references Cliente(Id),
+	constraint FK_TipoPedido_Pedido foreign key (IdTipoPedido) references TipoPedido(Id),
+    constraint FK_DireccionCliente_Pedido foreign key (IdDireccion) references DireccionCliente(Id)
+);
+
+create table DetallePedido (
+    Id int primary key identity(1,1),
+    IdPedido int not null,
+    IdProducto int not null,
+    Cantidad int not null,
+    PrecioUnitario decimal(10,2),
+    Subtotal decimal(10,2),
+    constraint FK_Pedido_DetallePedido foreign key (IdPedido) references Pedido(Id),
+    constraint FK_Producto_DetallePedido foreign key (IdProducto) references Producto(Id)
+);
+
+create table TipoPedido (
+    Id int primary key identity(1,1),
+    Nombre varchar(255),
+	Estado bit
+);
+
+create table rol (
+    Id int primary key identity(1,1),
+    Nombre varchar(255),
+    Estado bit
+);
+
+create table Colaborador (
+    Id int primary key identity(1,1),
+    Idrol int not null,
+    Nombres varchar(255),
+    Dni varchar(255),
+    Correo varchar(255),
+    Telefono varchar(255),
+    Usuario varchar(255),
+    Clave varchar(255),
+    Estado bit,
+    constraint FK_ROL_COLABORADOR foreign key (idrol) references Rol(Id)
+);
