@@ -1,4 +1,5 @@
 ﻿using api_pos_pizza.Models;
+using System.Data;
 
 namespace api_pos_pizza.Repositories.Interfaces
 {
@@ -10,5 +11,6 @@ namespace api_pos_pizza.Repositories.Interfaces
         Task<Categorium?> Update(int id, Categorium categoria);
         Task<bool> Delete(int id);
         Task<bool> Exists(int id);
+        Task<DataTable> GetCategoriasDataTableAsync();
     }
 }

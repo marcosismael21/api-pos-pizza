@@ -4,6 +4,7 @@ using api_pos_pizza.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace api_pos_pizza.Controllers
 {
@@ -146,6 +147,31 @@ namespace api_pos_pizza.Controllers
                     return NotFound(new { message = "Categoria no encontrada" });
 
                 return StatusCode(StatusCodes.Status200OK, new { message = "ok" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+            }
+        }
+
+        [Authorize(Roles = "Administrador,Cajero")]
+        [HttpGet]
+        [Route("datatable")]
+        public async Task<IActionResult> GetDataTable()
+        {
+            try
+            {
+
+                var resultado = await _categoriaRepository.GetCategoriasDataTableAsync();
+
+                if (resultado.Rows.Count == 0)
+                    return NotFound(new { message = "No se encontraron categorías" });
+
+                return Ok(new
+                {
+                    message = "ok",
+                    response = resultado
+                });
             }
             catch (Exception ex)
             {
