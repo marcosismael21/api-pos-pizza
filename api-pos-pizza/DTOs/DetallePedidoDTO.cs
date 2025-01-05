@@ -8,6 +8,7 @@
         public int Cantidad { get; set; }
         public decimal? PrecioUnitario { get; set; }
         public decimal? Subtotal { get; set; }
+        public bool? Estado { get; set; }
         public decimal? PedidoDescripcion { get; set; }
         public string? ProductoDescripcion { get; set; }
     }
@@ -19,6 +20,7 @@
         public int Cantidad { get; set; }
         public decimal? PrecioUnitario { get; set; }
         public decimal? Subtotal { get; set; }
+        public bool? Estado { get; set; }
     }
 
     public class UpdateDetallePedidoDTO
@@ -28,5 +30,6 @@
         public int Cantidad { get; set; }
         public decimal? PrecioUnitario { get; set; }
         public decimal? Subtotal { get; set; }
+        public bool? Estado { get; set; }
     }
 }

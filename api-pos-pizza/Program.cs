@@ -1,3 +1,4 @@
+using api_pos_pizza.BackgroundServices;
 using api_pos_pizza.Data;
 using api_pos_pizza.Repositories;
 using api_pos_pizza.Repositories.Interfaces;
@@ -97,6 +98,8 @@ builder.Services.AddScoped<IPedidoRepository, PedidoRepository>();
 builder.Services.AddScoped<IDetallePedidoRepository, DetallePedidoRepository>();
 builder.Services.AddScoped<IRolRepository, RolRepository>();
 builder.Services.AddScoped<IColaboradorRepository, ColaboradorRepository>();
+
+builder.Services.AddHostedService<PedidoBackgroundService>();
 
 var app = builder.Build();
 

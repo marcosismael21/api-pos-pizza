@@ -49,6 +49,7 @@ namespace api_pos_pizza.Repositories
             existingDetalleProducto.Cantidad = detallePedido.Cantidad;
             existingDetalleProducto.PrecioUnitario = detallePedido.PrecioUnitario ?? existingDetalleProducto.PrecioUnitario;
             existingDetalleProducto.Subtotal = detallePedido.Subtotal ?? existingDetalleProducto.Subtotal;
+            existingDetalleProducto.Estado = detallePedido.Estado ?? existingDetalleProducto.Estado;
 
             await _context.SaveChangesAsync();
             return existingDetalleProducto;
@@ -68,6 +69,34 @@ namespace api_pos_pizza.Repositories
         public async Task<bool> Exists(int id)
         {
             return await _context.DetallePedidos.AnyAsync(dp => dp.Id == id);
+        }
+
+        public async Task<List<DetallePedido>> CreateMultiple(List<DetallePedido> detalles)
+        {
+            foreach (var detalle in detalles)
+            {
+                detalle.Estado = true;
+                detalle.Subtotal = detalle.Cantidad * detalle.PrecioUnitario;
+            }
+
+            _context.DetallePedidos.AddRange(detalles);
+            await _context.SaveChangesAsync();
+            return detalles;
+        }
+
+        public async Task<bool> FinalizarDetallesPedido(int idPedido)
+        {
+            var detalles = await _context.DetallePedidos
+                .Where(d => d.IdPedido == idPedido && d.Estado == true)
+                .ToListAsync();
+
+            foreach (var detalle in detalles)
+            {
+                detalle.Estado = false;
+            }
+
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

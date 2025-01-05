@@ -35,6 +35,7 @@ namespace api_pos_pizza.Controllers
                     Cantidad = pd.Cantidad,
                     PrecioUnitario = pd.PrecioUnitario,
                     Subtotal = pd.Subtotal,
+                    Estado = pd.Estado,
                     PedidoDescripcion = pd.IdPedidoNavigation?.Total,
                     ProductoDescripcion = pd.IdProductoNavigation?.Nombre
                 });
@@ -71,6 +72,7 @@ namespace api_pos_pizza.Controllers
                     Cantidad = detallePedido.Cantidad,
                     PrecioUnitario = detallePedido.PrecioUnitario,
                     Subtotal = detallePedido.Subtotal,
+                    Estado = detallePedido.Estado,
                     PedidoDescripcion = detallePedido.IdPedidoNavigation?.Total,
                     ProductoDescripcion = detallePedido.IdProductoNavigation?.Nombre
                 };
@@ -99,7 +101,8 @@ namespace api_pos_pizza.Controllers
                     IdProducto = detallePedidoDTO.IdProducto,
                     Cantidad = detallePedidoDTO.Cantidad,
                     PrecioUnitario = detallePedidoDTO.PrecioUnitario,
-                    Subtotal = detallePedidoDTO.Subtotal
+                    Subtotal = detallePedidoDTO.Subtotal,
+                    Estado = detallePedidoDTO.Estado
                 };
 
                 await _detallePedidoRepository.Create(detallePedido);
@@ -124,7 +127,8 @@ namespace api_pos_pizza.Controllers
                     IdProducto = detallePedidoDTO.IdProducto,
                     Cantidad = detallePedidoDTO.Cantidad,
                     PrecioUnitario = detallePedidoDTO.PrecioUnitario,
-                    Subtotal = detallePedidoDTO.Subtotal
+                    Subtotal = detallePedidoDTO.Subtotal,
+                    Estado = detallePedidoDTO.Estado
                 };
 
                 var detallePedidoActualizado = await _detallePedidoRepository.Update(id, detallePedido);
@@ -157,6 +161,43 @@ namespace api_pos_pizza.Controllers
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+            }
+        }
+
+        [HttpPost("multiple")]
+        public async Task<IActionResult> GuardarMultiple([FromBody] CreateMultipleDetallePedidoDTO dto)
+        {
+            try
+            {
+                var detalles = dto.Productos.Select(p => new DetallePedido
+                {
+                    IdPedido = dto.IdPedido,
+                    IdProducto = p.IdProducto,
+                    Cantidad = p.Cantidad,
+                    PrecioUnitario = p.PrecioUnitario,
+                    Estado = true
+                }).ToList();
+
+                await _detallePedidoRepository.CreateMultiple(detalles);
+                return Ok(new { message = "ok" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+        [HttpPost("finalizar/{idPedido:int}")]
+        public async Task<IActionResult> FinalizarPedido(int idPedido)
+        {
+            try
+            {
+                await _detallePedidoRepository.FinalizarDetallesPedido(idPedido);
+                return Ok(new { message = "Pedido finalizado" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
             }
         }
     }
